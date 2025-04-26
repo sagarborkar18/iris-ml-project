@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Iris Flower Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        .flash {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .result {
+            margin-top: 20px;
+            background-color: #dff0d8;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .probabilities {
+            margin-top: 10px;
+        }
+
+        .input-values {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Iris Flower Classifier</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/get_data">
+            <label for="sepal_length">Sepal Length (cm):</label>
+            <input type="text" name="sepal_length" id="sepal_length" value="{{ INPUT_DATA.sepal_length if INPUT_DATA }}">
+
+            <label for="sepal_width">Sepal Width (cm):</label>
+            <input type="text" name="sepal_width" id="sepal_width" value="{{ INPUT_DATA.sepal_width if INPUT_DATA }}">
+
+            <label for="petal_length">Petal Length (cm):</label>
+            <input type="text" name="petal_length" id="petal_length" value="{{ INPUT_DATA.petal_length if INPUT_DATA }}">
+
+            <label for="petal_width">Petal Width (cm):</label>
+            <input type="text" name="petal_width" id="petal_width" value="{{ INPUT_DATA.petal_width if INPUT_DATA }}">
+
+            <input type="submit" value="Predict Species">
+        </form>
+
+        {% if PREDICT_VALUE %}
+            <div class="result">
+                <h2>Prediction: {{ PREDICT_VALUE }}</h2>
+                <p>{{ DESCRIPTION }}</p>
+
+                {% if PROBABILITIES %}
+                    <div class="probabilities">
+                        <strong>Prediction Probabilities:</strong>
+                        <ul>
+                            {% for species, proba in PROBABILITIES.items() %}
+                                <li>{{ species }}: {{ proba }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
